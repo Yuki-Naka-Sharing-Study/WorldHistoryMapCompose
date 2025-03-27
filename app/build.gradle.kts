@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
