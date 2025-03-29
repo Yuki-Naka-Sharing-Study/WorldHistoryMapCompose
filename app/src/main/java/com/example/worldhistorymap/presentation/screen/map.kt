@@ -6,14 +6,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -67,6 +71,12 @@ fun MapScreen(
 
             // EraSelectedButton
             EraSelectedButton(onClick = {})
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+
+            InfoButton(onClick = {})
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
         }
     }
 }
@@ -128,8 +138,21 @@ private fun EraSelectedButton(onClick: () -> Unit) {
         painter = painterResource(id = R.drawable.era_button),
         contentDescription = "Clickable Image",
         modifier = Modifier
-            .size(48.dp)
+            .size(56.dp)
             .clickable(onClick = onClick)
     )
 }
 
+@Composable
+private fun InfoButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Info,
+            contentDescription = "Info Button",
+            tint = androidx.compose.ui.graphics.Color.Gray,
+            modifier = Modifier
+                .size(56.dp)
+                .clickable(onClick = onClick)
+        )
+    }
+}
