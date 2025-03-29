@@ -13,6 +13,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun MapScreen(
     navHostController: NavHostController
 ) {
+    // TODO : SearchBar, EraSelectedButton, InfoButtonの作成
     val atasehir = LatLng(40.9971, 29.1007)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(atasehir, 15f)
