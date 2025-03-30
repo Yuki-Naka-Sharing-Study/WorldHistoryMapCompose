@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.worldhistorymap.R
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -49,10 +53,27 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
     navHostController: NavHostController
 ) {
+    val context = LocalContext.current
+    val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+    LaunchedEffect(Unit) {
+        if (!locationPermissionState.status.isGranted) {
+            locationPermissionState.launchPermissionRequest()
+        }
+    }
+
+    if (locationPermissionState.status.isGranted) {
+        ShowGoogleMap()
+    } else {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("位置情報の許可が必要です")
+        }
+    }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val yorktownLocation = LatLng(37.2383, -76.5097)
     val cameraPositionState = rememberCameraPositionState {
@@ -102,6 +123,38 @@ fun MapScreen(
             InfoButton(onClick = {})
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        }
+    }
+}
+
+@Composable
+private fun ShowGoogleMap() {
+    val yorktownLocation = LatLng(37.2383, -76.5097)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
+    }
+    val markerState = rememberMarkerState(position = yorktownLocation)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            uiSettings = remember {
+                MapUiSettings(
+                    zoomControlsEnabled = true,
+                    zoomGesturesEnabled = true,
+                    scrollGesturesEnabled = true,
+                    tiltGesturesEnabled = true
+                )
+            }
+        ) {
+            Marker(
+                state = markerState,
+                title = "ヨークタウンの独立",
+                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
+                visible = true,
+                onClick = { false }
+            )
         }
     }
 }

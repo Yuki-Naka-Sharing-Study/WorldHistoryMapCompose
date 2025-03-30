@@ -46,6 +46,7 @@ dependencies {
     implementation("com.google.maps.android:maps-compose-widgets:6.5.2")
     implementation("com.google.android.gms:play-services-maps:19.1.0")
     implementation("com.google.maps.android:maps-ktx:5.1.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
     implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
