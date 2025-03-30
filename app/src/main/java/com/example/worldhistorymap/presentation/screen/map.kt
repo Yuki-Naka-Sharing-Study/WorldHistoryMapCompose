@@ -1,5 +1,8 @@
 package com.example.worldhistorymap.presentation.screen
 
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,43 +26,66 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.worldhistorymap.R
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun MapScreen(
     navHostController: NavHostController
 ) {
-    // TODO : EraSelectedButton, InfoButtonの作成
-
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    val atasehir = LatLng(40.9971, 29.1007)
+    val yorktownLocation = LatLng(37.2383, -76.5097)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(atasehir, 15f)
+        position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
     }
+    val markerState = rememberMarkerState(position = yorktownLocation)
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
-        )
+            cameraPositionState = cameraPositionState,
+            uiSettings = remember {
+                MapUiSettings(
+                    zoomControlsEnabled = true,
+                    zoomGesturesEnabled = true,
+                    scrollGesturesEnabled = true,
+                    tiltGesturesEnabled = true
+                )
+            }
+        ) {
+            Marker(
+                state = markerState,
+                title = "ヨークタウンの独立",
+                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
+                visible = true,
+                onClick = { false }
+            )
+        }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             SearchBarContainer(
                 query = searchQuery,
                 onQueryChange = { searchQuery = it },
@@ -69,7 +95,6 @@ fun MapScreen(
                     .padding(top = 16.dp)
             )
 
-            // EraSelectedButton
             EraSelectedButton(onClick = {})
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
@@ -80,6 +105,19 @@ fun MapScreen(
         }
     }
 }
+
+private fun bitmapDescriptorFromDrawable(context: Context, drawableResId: Int): BitmapDescriptor? {
+    val drawable = ContextCompat.getDrawable(context, drawableResId)
+    Log.d("MapScreen", "Drawable: $drawable")
+    return if (drawable is BitmapDrawable) {
+        val bitmap = drawable.bitmap
+        BitmapDescriptorFactory.fromBitmap(bitmap)
+    } else {
+        Log.e("MapScreen", "Failed to convert drawable to BitmapDescriptor")
+        null
+    }
+}
+
 
 @Composable
 private fun SearchBarContainer(
