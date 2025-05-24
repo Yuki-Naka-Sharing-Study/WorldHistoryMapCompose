@@ -83,11 +83,13 @@ fun MapScreen(
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val yorktownLocation = LatLng(37.2383, -76.5097)
+    val kittyHawk = LatLng(36.0646, -75.7050)
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
     }
     val battleFieldMarkerState = rememberMarkerState(position = yorktownLocation)
-    val inventionMarkerState = rememberMarkerState(position = yorktownLocation)
+    val inventionMarkerState = rememberMarkerState(position = kittyHawk)
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
