@@ -8,17 +8,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -74,6 +79,7 @@ fun MapScreen(
             Text("位置情報の許可が必要です")
         }
     }
+    var battleFieldSelected by remember { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val yorktownLocation = LatLng(37.2383, -76.5097)
     val cameraPositionState = rememberCameraPositionState {
@@ -94,35 +100,68 @@ fun MapScreen(
                 )
             }
         ) {
-            Marker(
-                state = markerState,
-                title = "ヨークタウンの独立",
-                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
-                visible = true,
-                onClick = { false }
-            )
+            if (battleFieldSelected) {
+                Marker(
+                    state = markerState,
+                    title = "ヨークタウンの独立",
+                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
+                    visible = true,
+                    onClick = { false }
+                )
+            }
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            SearchBarContainer(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
+        Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                SearchBarContainer(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                )
 
-            EraSelectedButton(onClick = {})
+                EraSelectedButton(onClick = {})
 
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
 
-            InfoButton(onClick = {})
+                InfoButton(onClick = {})
 
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+            Row {
+                FilterChip(
+                    onClick = { battleFieldSelected = !battleFieldSelected },
+                    label = {
+                        Text("")
+                    },
+                    selected = battleFieldSelected,
+                    leadingIcon = if (battleFieldSelected) {
+                        {
+                            Icon(
+                                painter = painterResource(id = R.drawable.battle_field_icon),
+                                contentDescription = "戦争アイコン",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        {
+                            Icon(
+                                painter = painterResource(id = R.drawable.battle_field_icon),
+                                contentDescription = "戦争アイコン",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    },
+                )
+            }
         }
     }
 }
