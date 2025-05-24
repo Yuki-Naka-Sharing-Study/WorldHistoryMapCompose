@@ -86,7 +86,8 @@ fun MapScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
     }
-    val markerState = rememberMarkerState(position = yorktownLocation)
+    val battleFieldMarkerState = rememberMarkerState(position = yorktownLocation)
+    val inventionMarkerState = rememberMarkerState(position = yorktownLocation)
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -103,7 +104,7 @@ fun MapScreen(
         ) {
             if (battleFieldSelected) {
                 Marker(
-                    state = markerState,
+                    state = battleFieldMarkerState,
                     title = "ヨークタウンの独立",
                     icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
                     visible = true,
@@ -113,7 +114,7 @@ fun MapScreen(
 
             if (inventionSelected) {
                 Marker(
-                    state = markerState,
+                    state = inventionMarkerState,
                     title = "飛行機の発明",
                     icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.invention_icon),
                     visible = true,
@@ -148,6 +149,8 @@ fun MapScreen(
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
             Row {
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+
                 FilterChip(
                     onClick = { battleFieldSelected = !battleFieldSelected },
                     label = {
@@ -167,6 +170,33 @@ fun MapScreen(
                             Icon(
                                 painter = painterResource(id = R.drawable.battle_field_icon),
                                 contentDescription = "戦争アイコン",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    },
+                )
+
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+
+                FilterChip(
+                    onClick = { inventionSelected = !inventionSelected },
+                    label = {
+                        Text("")
+                    },
+                    selected = inventionSelected,
+                    leadingIcon = if (inventionSelected) {
+                        {
+                            Icon(
+                                painter = painterResource(id = R.drawable.invention_icon),
+                                contentDescription = "発明アイコン",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        {
+                            Icon(
+                                painter = painterResource(id = R.drawable.invention_icon),
+                                contentDescription = "発明アイコン",
                                 modifier = Modifier.size(FilterChipDefaults.IconSize)
                             )
                         }
