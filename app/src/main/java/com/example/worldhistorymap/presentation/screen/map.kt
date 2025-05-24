@@ -84,6 +84,7 @@ fun MapScreen(
     var inventionSelected by remember { mutableStateOf(false) }
     var artSelected by remember { mutableStateOf(false) }
 
+    val trafalgar = LatLng(36.8333, -6.1333)
     val yorktown = LatLng(37.2383, -76.5097)
     val kittyHawk = LatLng(36.0646, -75.7050)
     val versailles = LatLng(48.8049, 2.1204)
@@ -91,7 +92,8 @@ fun MapScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
     }
-    val battleFieldMarkerState = rememberMarkerState(position = yorktown)
+    val yorktownBattleFieldMarkerState = rememberMarkerState(position = yorktown)
+    val trafalgarBattleFieldMarkerState = rememberMarkerState(position = trafalgar)
     val inventionMarkerState = rememberMarkerState(position = kittyHawk)
     val artMarkerState = rememberMarkerState(position = versailles)
 
@@ -110,8 +112,18 @@ fun MapScreen(
         ) {
             if (battleFieldSelected) {
                 Marker(
-                    state = battleFieldMarkerState,
+                    state = yorktownBattleFieldMarkerState,
                     title = "ヨークタウンの独立",
+                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
+                    visible = true,
+                    onClick = { false }
+                )
+            }
+
+            if (battleFieldSelected) {
+                Marker(
+                    state = trafalgarBattleFieldMarkerState,
+                    title = "トラファルガーの海戦",
                     icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
                     visible = true,
                     onClick = { false }
