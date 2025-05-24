@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilterChip
@@ -80,6 +79,8 @@ fun MapScreen(
         }
     }
     var battleFieldSelected by remember { mutableStateOf(false) }
+    var inventionSelected by remember { mutableStateOf(false) }
+
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val yorktownLocation = LatLng(37.2383, -76.5097)
     val cameraPositionState = rememberCameraPositionState {
@@ -104,7 +105,17 @@ fun MapScreen(
                 Marker(
                     state = markerState,
                     title = "ヨークタウンの独立",
-                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
+                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
+                    visible = true,
+                    onClick = { false }
+                )
+            }
+
+            if (inventionSelected) {
+                Marker(
+                    state = markerState,
+                    title = "飛行機の発明",
+                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.invention_icon),
                     visible = true,
                     onClick = { false }
                 )
@@ -190,7 +201,7 @@ private fun ShowGoogleMap() {
             Marker(
                 state = markerState,
                 title = "ヨークタウンの独立",
-                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.ic_independence),
+                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
                 visible = true,
                 onClick = { false }
             )
