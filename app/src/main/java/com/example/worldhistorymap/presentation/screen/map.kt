@@ -110,6 +110,7 @@ fun MapScreen(
                 )
             }
         ) {
+            // TODO:各アイコンの歴史的事象が増えてくるとmapファイルが肥大化してくる。町田さんに相談。
             if (battleFieldSelected) {
                 Marker(
                     state = yorktownBattleFieldMarkerState,
