@@ -86,7 +86,7 @@ fun MapScreen(
     val kittyHawk = LatLng(36.0646, -75.7050)
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
+        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
     }
     val battleFieldMarkerState = rememberMarkerState(position = yorktownLocation)
     val inventionMarkerState = rememberMarkerState(position = kittyHawk)
@@ -211,11 +211,11 @@ fun MapScreen(
 
 @Composable
 private fun ShowGoogleMap() {
-    val yorktownLocation = LatLng(37.2383, -76.5097)
+    val worldCenter = LatLng(0.0, 0.0)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(yorktownLocation, 15f)
+        position = CameraPosition.fromLatLngZoom(worldCenter, 2f)
     }
-    val markerState = rememberMarkerState(position = yorktownLocation)
+    val markerState = rememberMarkerState(position = worldCenter)
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
