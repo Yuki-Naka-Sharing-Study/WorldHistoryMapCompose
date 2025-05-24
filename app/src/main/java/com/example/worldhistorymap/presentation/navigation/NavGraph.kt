@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.worldhistorymap.presentation.screen.MapScreen
+import com.example.worldhistorymap.presentation.screen.map.MapScreen
 import com.example.worldhistorymap.presentation.screen.SettingsScreen
 
 @Composable

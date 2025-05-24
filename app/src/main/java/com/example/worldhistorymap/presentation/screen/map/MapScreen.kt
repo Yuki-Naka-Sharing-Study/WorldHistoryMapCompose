@@ -1,8 +1,6 @@
-package com.example.worldhistorymap.presentation.screen
+package com.example.worldhistorymap.presentation.screen.map
 
-import android.content.Context
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,19 +34,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.worldhistorymap.R
+import com.example.worldhistorymap.presentation.screen.map.markers.ArtMarkers
+import com.example.worldhistorymap.presentation.screen.map.markers.BattleMarkers
+import com.example.worldhistorymap.presentation.screen.map.markers.InventionMarkers
+import com.example.worldhistorymap.util.bitmapDescriptorFromDrawable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -63,7 +63,7 @@ fun MapScreen(
     navHostController: NavHostController
 ) {
     val context = LocalContext.current
-    val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     LaunchedEffect(Unit) {
         if (!locationPermissionState.status.isGranted) {
@@ -84,18 +84,9 @@ fun MapScreen(
     var inventionSelected by remember { mutableStateOf(false) }
     var artSelected by remember { mutableStateOf(false) }
 
-    val trafalgar = LatLng(36.8333, -6.1333)
-    val yorktown = LatLng(37.2383, -76.5097)
-    val kittyHawk = LatLng(36.0646, -75.7050)
-    val versailles = LatLng(48.8049, 2.1204)
-
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
     }
-    val yorktownBattleFieldMarkerState = rememberMarkerState(position = yorktown)
-    val trafalgarBattleFieldMarkerState = rememberMarkerState(position = trafalgar)
-    val inventionMarkerState = rememberMarkerState(position = kittyHawk)
-    val artMarkerState = rememberMarkerState(position = versailles)
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -110,45 +101,16 @@ fun MapScreen(
                 )
             }
         ) {
-            // TODO:各アイコンの歴史的事象が増えてくるとmapファイルが肥大化してくる。町田さんに相談。
             if (battleFieldSelected) {
-                Marker(
-                    state = yorktownBattleFieldMarkerState,
-                    title = "ヨークタウンの独立",
-                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
-                    visible = true,
-                    onClick = { false }
-                )
-            }
-
-            if (battleFieldSelected) {
-                Marker(
-                    state = trafalgarBattleFieldMarkerState,
-                    title = "トラファルガーの海戦",
-                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
-                    visible = true,
-                    onClick = { false }
-                )
+                BattleMarkers(context, true)
             }
 
             if (inventionSelected) {
-                Marker(
-                    state = inventionMarkerState,
-                    title = "飛行機の発明",
-                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.invention_icon),
-                    visible = true,
-                    onClick = { false }
-                )
+                InventionMarkers(context, true)
             }
 
             if (artSelected) {
-                Marker(
-                    state = artMarkerState,
-                    title = "ヴェルサイユ宮殿",
-                    icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.art_icon),
-                    visible = true,
-                    onClick = { false }
-                )
+                ArtMarkers(context, true)
             }
         }
 
@@ -295,18 +257,6 @@ private fun ShowGoogleMap() {
     }
 }
 
-private fun bitmapDescriptorFromDrawable(context: Context, drawableResId: Int): BitmapDescriptor? {
-    val drawable = ContextCompat.getDrawable(context, drawableResId)
-    Log.d("MapScreen", "Drawable: $drawable")
-    return if (drawable is BitmapDrawable) {
-        val bitmap = drawable.bitmap
-        BitmapDescriptorFactory.fromBitmap(bitmap)
-    } else {
-        Log.e("MapScreen", "Failed to convert drawable to BitmapDescriptor")
-        null
-    }
-}
-
 @Composable
 private fun SearchBarContainer(
     query: String,
@@ -326,7 +276,7 @@ private fun SearchBar(
     val modifier = Modifier
         .fillMaxWidth()
         .background(
-            androidx.compose.ui.graphics.Color.Gray.copy(alpha = 0.1f),
+            Color.Gray.copy(alpha = 0.1f),
             shape = RoundedCornerShape(
                 dimensionResource(
                     id = R.dimen.search_bar_background_rounded_corner_shape
@@ -375,7 +325,7 @@ private fun InfoButton(onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Default.Info,
             contentDescription = "Info Button",
-            tint = androidx.compose.ui.graphics.Color.Gray,
+            tint = Color.Gray,
             modifier = Modifier
                 .size(56.dp)
                 .clickable(onClick = onClick)
