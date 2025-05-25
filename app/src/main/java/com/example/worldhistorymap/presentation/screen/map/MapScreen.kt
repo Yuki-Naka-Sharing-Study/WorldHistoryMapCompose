@@ -55,6 +55,8 @@ import com.example.worldhistorymap.R
 import com.example.worldhistorymap.presentation.screen.map.markers.ArtMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.BattleMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.InventionMarkers
+import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
+import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
 import com.example.worldhistorymap.util.bitmapDescriptorFromDrawable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -120,6 +122,7 @@ fun MapScreen(
                 )
             }
         ) {
+            // Markers
             if (selectedCategory == "battle") {
                 BattleMarkers(
                     context = context,
@@ -133,6 +136,18 @@ fun MapScreen(
 
             if (selectedCategory == "art") {
                 ArtMarkers(context, true)
+            }
+
+
+            // Polylines
+            if (selectedCategory == "alliance") {
+                TripleAlliancePolyline(
+                    selectedEra = selectedEra
+                )
+
+                TripleEntentePolyline(
+                    selectedEra = selectedEra
+                )
             }
         }
 
@@ -185,6 +200,23 @@ fun MapScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.battle_field_icon),
                             contentDescription = "戦争アイコン",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+
+                FilterChip(
+                    onClick = {
+                        selectedCategory = if (selectedCategory == "alliance") null else "alliance"
+                    },
+                    selected = selectedCategory == "alliance",
+                    label = { Text("") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.alliance_icon),
+                            contentDescription = "同盟アイコン",
                             modifier = Modifier.size(FilterChipDefaults.IconSize)
                         )
                     }
