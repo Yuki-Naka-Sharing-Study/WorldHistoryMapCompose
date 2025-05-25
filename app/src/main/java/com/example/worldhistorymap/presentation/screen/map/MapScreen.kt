@@ -14,14 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +42,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -94,7 +92,10 @@ fun MapScreen(
     if (locationPermissionState.status.isGranted) {
         ShowGoogleMap()
     } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Text("位置情報の許可が必要です")
         }
     }
@@ -257,7 +258,10 @@ private fun SearchBarContainer(
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.space_8_dp))) {
-        SearchBar(query = query, onQueryChange = onQueryChange)
+        SearchBar(
+            query = query,
+            onQueryChange = onQueryChange
+        )
     }
 }
 
@@ -302,7 +306,7 @@ private fun SearchBar(
 }
 
 @Composable
-fun EraSelectedButton(
+private fun EraSelectedButton(
     modifier: Modifier = Modifier,
     items: List<String>,
     value: String,
@@ -310,7 +314,8 @@ fun EraSelectedButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
+
         Row(
             modifier = Modifier
                 .clickable { expanded = !expanded }
@@ -334,19 +339,29 @@ fun EraSelectedButton(
             )
         }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            offset = DpOffset(0.dp, 8.dp)
-        ) {
-            items.forEach { item ->
-                DropdownMenuItem(
-                    text = { Text(text = item) },
-                    onClick = {
-                        onValueChange(item)
-                        expanded = false
+        if (expanded) {
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(top = 4.dp)
+                    .wrapContentSize(Alignment.TopStart)
+            ) {
+                items.forEach { item ->
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                onValueChange(item)
+                                expanded = false
+                            }
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = item,
+                            fontSize = 14.sp,
+                            color = Color.Black
+                        )
                     }
-                )
+                }
             }
         }
     }
