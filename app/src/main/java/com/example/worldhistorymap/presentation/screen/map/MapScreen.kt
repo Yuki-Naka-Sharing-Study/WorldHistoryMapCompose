@@ -339,6 +339,7 @@ private fun EraSelectedButton(
             Text(
                 text = selectedEra,
                 fontSize = 12.sp,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 lineHeight = 14.sp,
