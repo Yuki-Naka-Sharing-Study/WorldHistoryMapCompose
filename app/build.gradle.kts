@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("com.github.TheWyp:compose-wheel-picker:1.0.3")
     implementation("com.google.maps.android:maps-compose:6.5.2")
     implementation("com.google.maps.android:maps-compose-utils:6.5.2")
     implementation("com.google.maps.android:maps-compose-widgets:6.5.2")
