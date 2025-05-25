@@ -143,6 +143,7 @@ fun MapScreen(
             Row {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
+                // TODO:以下の複数のFilterChipを一つの関数で表示する案
                 FilterChip(
                     onClick = {
                         selectedCategory = if (selectedCategory == "battle") null else "battle"
