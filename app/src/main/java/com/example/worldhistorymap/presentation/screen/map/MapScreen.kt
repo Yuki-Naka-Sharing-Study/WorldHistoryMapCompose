@@ -144,6 +144,7 @@ fun MapScreen(
             ) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
+                // TODO:wheel-pickerで置き換え検討
                 EraSelectedButton(
                     modifier = Modifier.fillMaxWidth(),
                     items = eras,
@@ -305,6 +306,7 @@ private fun SearchBar(
     }
 }
 
+// TODO:wheel-pickerで置き換え検討
 @Composable
 private fun EraSelectedButton(
     modifier: Modifier = Modifier,
