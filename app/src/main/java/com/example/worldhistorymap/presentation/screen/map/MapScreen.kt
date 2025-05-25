@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -25,13 +29,16 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,8 +49,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.worldhistorymap.R
 import com.example.worldhistorymap.presentation.screen.map.markers.ArtMarkers
@@ -60,6 +69,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -144,12 +154,10 @@ fun MapScreen(
             ) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                // TODO:wheel-pickerで置き換え検討
                 EraSelectedButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    items = eras,
-                    value = selectedEra,
-                    onValueChange = { selectedEra = it }
+                    eras = eras,
+                    selectedEra = selectedEra,
+                    onEraSelected = { selectedEra = it }
                 )
 
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
@@ -306,62 +314,86 @@ private fun SearchBar(
     }
 }
 
-// TODO:wheel-pickerで置き換え検討
 @Composable
 private fun EraSelectedButton(
     modifier: Modifier = Modifier,
-    items: List<String>,
-    value: String,
-    onValueChange: (String) -> Unit
+    eras: List<String>,
+    selectedEra: String,
+    onEraSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .size(56.dp)
+            .clickable { expanded = true },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "🕰️",
+            fontSize = 32.sp
+        )
+    }
 
-        Row(
-            modifier = Modifier
-                .clickable { expanded = !expanded }
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = value,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = "Dropdown Icon",
-                tint = Color.Black
-            )
-        }
-
-        if (expanded) {
-            Column(
+    if (expanded) {
+        Dialog(onDismissRequest = { expanded = false }) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White,
                 modifier = Modifier
-                    .background(Color.White)
-                    .padding(top = 4.dp)
-                    .wrapContentSize(Alignment.TopStart)
+                    .width(200.dp)
             ) {
-                items.forEach { item ->
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("時代を選択", fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    val listState = rememberLazyListState()
+                    val coroutineScope = rememberCoroutineScope()
+
+                    LaunchedEffect(Unit) {
+                        val index = eras.indexOf(selectedEra).coerceAtLeast(0)
+                        listState.scrollToItem(index)
+                    }
+
                     Box(
                         modifier = Modifier
-                            .clickable {
-                                onValueChange(item)
-                                expanded = false
-                            }
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .height(150.dp)
+                            .fillMaxWidth()
                     ) {
-                        Text(
-                            text = item,
-                            fontSize = 14.sp,
-                            color = Color.Black
-                        )
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            itemsIndexed(eras) { index, era ->
+                                val isSelected = eras[index] == selectedEra
+                                Text(
+                                    text = era,
+                                    fontSize = if (isSelected) 20.sp else 16.sp,
+                                    color = if (isSelected) Color.Black else Color.Gray,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onEraSelected(era)
+                                            coroutineScope.launch {
+                                                listState.animateScrollToItem(index)
+                                            }
+                                        }
+                                        .padding(vertical = 8.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    TextButton(onClick = { expanded = false }) {
+                        Text("閉じる")
                     }
                 }
             }
