@@ -80,9 +80,10 @@ fun MapScreen(
     }
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
-    var battleFieldSelected by remember { mutableStateOf(false) }
-    var inventionSelected by remember { mutableStateOf(false) }
-    var artSelected by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
+//    var battleFieldSelected by remember { mutableStateOf(false) }
+//    var inventionSelected by remember { mutableStateOf(false) }
+//    var artSelected by remember { mutableStateOf(false) }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
@@ -101,15 +102,15 @@ fun MapScreen(
                 )
             }
         ) {
-            if (battleFieldSelected) {
+            if (selectedCategory == "battle") {
                 BattleMarkers(context, true)
             }
 
-            if (inventionSelected) {
+            if (selectedCategory == "invention") {
                 InventionMarkers(context, true)
             }
 
-            if (artSelected) {
+            if (selectedCategory == "art") {
                 ArtMarkers(context, true)
             }
         }
@@ -143,82 +144,54 @@ fun MapScreen(
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
                 FilterChip(
-                    onClick = { battleFieldSelected = !battleFieldSelected },
+                    onClick = {
+                        selectedCategory = if (selectedCategory == "battle") null else "battle"
+                    },
                     label = {
                         Text("")
                     },
-                    selected = battleFieldSelected,
-                    leadingIcon = if (battleFieldSelected) {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.battle_field_icon),
-                                contentDescription = "戦争アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.battle_field_icon),
-                                contentDescription = "戦争アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    },
+                    selected = selectedCategory == "battle",
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.battle_field_icon),
+                            contentDescription = "戦争アイコン",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
                 )
 
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
                 FilterChip(
-                    onClick = { inventionSelected = !inventionSelected },
-                    label = {
-                        Text("")
+                    onClick = {
+                        selectedCategory = if (selectedCategory == "invention") null else "invention"
                     },
-                    selected = inventionSelected,
-                    leadingIcon = if (inventionSelected) {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.invention_icon),
-                                contentDescription = "発明アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.invention_icon),
-                                contentDescription = "発明アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    },
+                    selected = selectedCategory == "invention",
+                    label = { Text("") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.invention_icon),
+                            contentDescription = "発明アイコン",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
                 )
 
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
                 FilterChip(
-                    onClick = { artSelected = !artSelected },
-                    label = {
-                        Text("")
+                    onClick = {
+                        selectedCategory = if (selectedCategory == "art") null else "art"
                     },
-                    selected = artSelected,
-                    leadingIcon = if (artSelected) {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.art_icon),
-                                contentDescription = "芸術アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        {
-                            Icon(
-                                painter = painterResource(id = R.drawable.art_icon),
-                                contentDescription = "芸術アイコン",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    },
+                    selected = selectedCategory == "art",
+                    label = { Text("") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.art_icon),
+                            contentDescription = "芸術アイコン",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
                 )
             }
         }
