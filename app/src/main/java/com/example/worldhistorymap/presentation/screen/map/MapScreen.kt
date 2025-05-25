@@ -64,6 +64,11 @@ fun MapScreen(
 ) {
     val context = LocalContext.current
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
+    }
 
     LaunchedEffect(Unit) {
         if (!locationPermissionState.status.isGranted) {
@@ -77,16 +82,6 @@ fun MapScreen(
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("位置情報の許可が必要です")
         }
-    }
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
-//    var battleFieldSelected by remember { mutableStateOf(false) }
-//    var inventionSelected by remember { mutableStateOf(false) }
-//    var artSelected by remember { mutableStateOf(false) }
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
