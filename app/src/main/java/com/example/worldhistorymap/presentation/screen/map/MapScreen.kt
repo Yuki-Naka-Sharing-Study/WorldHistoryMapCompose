@@ -1,7 +1,6 @@
 package com.example.worldhistorymap.presentation.screen.map
 
 import android.Manifest
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -39,7 +42,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.worldhistorymap.R
 import com.example.worldhistorymap.presentation.screen.map.markers.ArtMarkers
@@ -64,11 +70,20 @@ fun MapScreen(
 ) {
     val context = LocalContext.current
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
     }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
+    var selectedEra by remember { mutableStateOf("🕰️") }
+    val eras = listOf(
+        "紀元前3000年", "紀元前2000年", "紀元前1000年", "紀元前500年",
+        "紀元前5世紀", "紀元前4世紀", "紀元前3世紀", "紀元前2世紀", "紀元前1世紀",
+        "1世紀", "2世紀", "3世紀", "4世紀", "5世紀",
+        "6世紀", "7世紀", "8世紀", "9世紀", "10世紀",
+        "11世紀", "12世紀", "13世紀", "14世紀", "15世紀",
+        "16世紀", "17世紀", "18世紀", "19世紀", "20世紀", "21世紀"
+    )
 
     LaunchedEffect(Unit) {
         if (!locationPermissionState.status.isGranted) {
@@ -111,10 +126,7 @@ fun MapScreen(
         }
 
         Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
+            Row {
                 SearchBarContainer(
                     query = searchQuery,
                     onQueryChange = { searchQuery = it },
@@ -123,14 +135,26 @@ fun MapScreen(
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 )
+            }
 
-                EraSelectedButton(onClick = {})
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                EraSelectedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    items = eras,
+                    value = selectedEra,
+                    onValueChange = { selectedEra = it }
+                )
+
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
                 InfoButton(onClick = {})
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
@@ -232,7 +256,7 @@ private fun SearchBarContainer(
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.space_16_dp))) {
+    Box(modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.space_8_dp))) {
         SearchBar(query = query, onQueryChange = onQueryChange)
     }
 }
@@ -278,14 +302,54 @@ private fun SearchBar(
 }
 
 @Composable
-private fun EraSelectedButton(onClick: () -> Unit) {
-    Image(
-        painter = painterResource(id = R.drawable.era_button),
-        contentDescription = "Clickable Image",
-        modifier = Modifier
-            .size(56.dp)
-            .clickable(onClick = onClick)
-    )
+fun EraSelectedButton(
+    modifier: Modifier = Modifier,
+    items: List<String>,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .clickable { expanded = !expanded }
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = value,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = "Dropdown Icon",
+                tint = Color.Black
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(0.dp, 8.dp)
+        ) {
+            items.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(text = item) },
+                    onClick = {
+                        onValueChange(item)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -296,7 +360,7 @@ private fun InfoButton(onClick: () -> Unit) {
             contentDescription = "Info Button",
             tint = Color.Gray,
             modifier = Modifier
-                .size(56.dp)
+                .size(24.dp)
                 .clickable(onClick = onClick)
         )
     }
