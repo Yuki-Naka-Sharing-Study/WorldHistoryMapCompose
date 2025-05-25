@@ -318,10 +318,12 @@ private fun SearchBar(
 private fun EraSelectedButton(
     modifier: Modifier = Modifier,
     eras: List<String>,
-    selectedEra: String,
+    selectedEra: String?,
     onEraSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val displayText = selectedEra ?: "🕰️"
 
     Box(
         modifier = modifier
@@ -330,8 +332,9 @@ private fun EraSelectedButton(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "🕰️",
-            fontSize = 32.sp
+            text = displayText,
+            fontSize = if (selectedEra == null) 32.sp else 12.sp,
+            textAlign = TextAlign.Center
         )
     }
 
@@ -340,12 +343,10 @@ private fun EraSelectedButton(
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = Color.White,
-                modifier = Modifier
-                    .width(200.dp)
+                modifier = Modifier.width(200.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
+                    modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("時代を選択", fontWeight = FontWeight.Bold)
@@ -356,7 +357,7 @@ private fun EraSelectedButton(
                     val coroutineScope = rememberCoroutineScope()
 
                     LaunchedEffect(Unit) {
-                        val index = eras.indexOf(selectedEra).coerceAtLeast(0)
+                        val index = selectedEra?.let { eras.indexOf(it) }?.coerceAtLeast(0) ?: 0
                         listState.scrollToItem(index)
                     }
 
@@ -365,12 +366,9 @@ private fun EraSelectedButton(
                             .height(150.dp)
                             .fillMaxWidth()
                     ) {
-                        LazyColumn(
-                            state = listState,
-                            modifier = Modifier.align(Alignment.Center)
-                        ) {
+                        LazyColumn(state = listState) {
                             itemsIndexed(eras) { index, era ->
-                                val isSelected = eras[index] == selectedEra
+                                val isSelected = era == selectedEra
                                 Text(
                                     text = era,
                                     fontSize = if (isSelected) 20.sp else 16.sp,
@@ -383,6 +381,7 @@ private fun EraSelectedButton(
                                             coroutineScope.launch {
                                                 listState.animateScrollToItem(index)
                                             }
+                                            expanded = false
                                         }
                                         .padding(vertical = 8.dp)
                                 )
