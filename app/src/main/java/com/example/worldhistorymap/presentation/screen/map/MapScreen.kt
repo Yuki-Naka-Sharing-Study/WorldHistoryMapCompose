@@ -1,6 +1,7 @@
 package com.example.worldhistorymap.presentation.screen.map
 
 import android.Manifest
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -83,7 +84,6 @@ fun MapScreen(
     }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
-    var selectedEra by remember { mutableStateOf("🕰️") }
     val eras = listOf(
         "紀元前3000年", "紀元前2000年", "紀元前1000年", "紀元前500年",
         "紀元前5世紀", "紀元前4世紀", "紀元前3世紀", "紀元前2世紀", "紀元前1世紀",
@@ -92,6 +92,7 @@ fun MapScreen(
         "11世紀", "12世紀", "13世紀", "14世紀", "15世紀",
         "16世紀", "17世紀", "18世紀", "19世紀", "20世紀", "21世紀"
     )
+    var selectedEra by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         if (!locationPermissionState.status.isGranted) {
@@ -323,19 +324,28 @@ private fun EraSelectedButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val displayText = selectedEra ?: "🕰️"
-
     Box(
         modifier = modifier
             .size(56.dp)
             .clickable { expanded = true },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = displayText,
-            fontSize = if (selectedEra == null) 32.sp else 12.sp,
-            textAlign = TextAlign.Center
-        )
+        if (selectedEra == null) {
+            Image(
+                painter = painterResource(id = R.drawable.era_button),
+                contentDescription = "時代選択ボタン",
+                modifier = Modifier.size(40.dp)
+            )
+        } else {
+            Text(
+                text = selectedEra,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                lineHeight = 14.sp,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+        }
     }
 
     if (expanded) {
@@ -363,7 +373,7 @@ private fun EraSelectedButton(
 
                     Box(
                         modifier = Modifier
-                            .height(150.dp)
+                            .height(160.dp)
                             .fillMaxWidth()
                     ) {
                         LazyColumn(state = listState) {
