@@ -11,25 +11,28 @@ import com.google.maps.android.compose.rememberMarkerState
 @Composable
 fun BattleMarkers(
     context: Context,
-    visible: Boolean
+    selectedEra: String? // ← 世紀を受け取る
 ) {
-    if (!visible) return
+    // ヨークタウン（18世紀, 1783年）
+    if (selectedEra == "18世紀") {
+        Marker(
+            state = rememberMarkerState(position = LatLng(37.2383, -76.5097)),
+            title = "ヨークタウンの独立",
+            icon = bitmapDescriptorFromDrawable(context, R.drawable.battle_field_icon),
+            visible = true,
+            onClick = { false }
+        )
+    }
 
-    val yorktown = LatLng(37.2383, -76.5097)
-    val trafalgar = LatLng(36.8333, -6.1333)
-
-    Marker(
-        state = rememberMarkerState(position = yorktown),
-        title = "ヨークタウンの独立",
-        icon = bitmapDescriptorFromDrawable(context, R.drawable.battle_field_icon),
-        visible = true,
-        onClick = { false }
-    )
-    Marker(
-        state = rememberMarkerState(position = trafalgar),
-        title = "トラファルガーの海戦",
-        icon = bitmapDescriptorFromDrawable(context, R.drawable.battle_field_icon),
-        visible = true,
-        onClick = { false }
-    )
+    // トラファルガー（19世紀, 1805年）
+    if (selectedEra == "19世紀") {
+        Marker(
+            state = rememberMarkerState(position = LatLng(36.8333, -6.1333)),
+            title = "トラファルガーの海戦",
+            icon = bitmapDescriptorFromDrawable(context, R.drawable.battle_field_icon),
+            visible = true,
+            onClick = { false }
+        )
+    }
 }
+

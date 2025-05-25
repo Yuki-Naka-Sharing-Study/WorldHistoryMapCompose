@@ -121,7 +121,10 @@ fun MapScreen(
             }
         ) {
             if (selectedCategory == "battle") {
-                BattleMarkers(context, true)
+                BattleMarkers(
+                    context = context,
+                    selectedEra = selectedEra
+                )
             }
 
             if (selectedCategory == "invention") {
