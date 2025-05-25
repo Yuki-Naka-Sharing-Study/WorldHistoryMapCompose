@@ -418,7 +418,7 @@ private fun InfoButton(onClick: () -> Unit) {
             contentDescription = "Info Button",
             tint = Color.Gray,
             modifier = Modifier
-                .size(24.dp)
+                .size(56.dp)
                 .clickable(onClick = onClick)
         )
     }
