@@ -122,7 +122,10 @@ fun MapScreen(
             }
 
             if (selectedCategory == "art") {
-                ArtMarkers(context, true)
+                ArtMarkers(
+                    context = context,
+                    selectedEra = selectedEra
+                )
             }
 
 

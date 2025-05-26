@@ -11,17 +11,17 @@ import com.google.maps.android.compose.rememberMarkerState
 @Composable
 fun ArtMarkers(
     context: Context,
-    visible: Boolean
+    selectedEra: String?
 ) {
-    if (!visible) return
+    if (selectedEra == "17世紀") {
+        val versailles = LatLng(48.8049, 2.1204)
 
-    val versailles = LatLng(48.8049, 2.1204)
-
-    Marker(
-        state = rememberMarkerState(position = versailles),
-        title = "ヴェルサイユ宮殿",
-        icon = bitmapDescriptorFromDrawable(context, R.drawable.art_icon),
-        visible = true,
-        onClick = { false }
-    )
+        Marker(
+            state = rememberMarkerState(position = versailles),
+            title = "ヴェルサイユ宮殿",
+            icon = bitmapDescriptorFromDrawable(context, R.drawable.art_icon),
+            visible = true,
+            onClick = { false }
+        )
+    }
 }
