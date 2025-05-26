@@ -64,9 +64,11 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
@@ -78,9 +80,12 @@ fun MapScreen(
 ) {
     val context = LocalContext.current
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val worldCenter = LatLng(0.0, 0.0)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 2f)
+        position = CameraPosition.fromLatLngZoom(worldCenter, 2f)
     }
+    val markerState = rememberMarkerState(position = worldCenter)
+
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val eras = listOf(
@@ -100,29 +105,7 @@ fun MapScreen(
     }
 
     if (locationPermissionState.status.isGranted) {
-        ShowGoogleMap()
-    } else {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("位置情報の許可が必要です")
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            uiSettings = remember {
-                MapUiSettings(
-                    zoomControlsEnabled = true,
-                    zoomGesturesEnabled = true,
-                    scrollGesturesEnabled = true,
-                    tiltGesturesEnabled = true
-                )
-            }
-        ) {
+        ShowGoogleMap(cameraPositionState = cameraPositionState) {
             // Markers
             if (selectedCategory == "battle") {
                 BattleMarkers(
@@ -152,165 +135,161 @@ fun MapScreen(
             }
 
             if (selectedCategory == "route") {
-                ColumbusRoute(selectedEra)
+                ColumbusRoute(selectedEra, cameraPositionState)
             }
         }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("位置情報の許可が必要です")
+        }
+    }
 
-        Column {
-            Row {
-                SearchBarContainer(
-                    query = searchQuery,
-                    onQueryChange = { searchQuery = it },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                )
-            }
+    Column {
+        Row {
+            SearchBarContainer(
+                query = searchQuery,
+                onQueryChange = { searchQuery = it },
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+        }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                EraSelectedButton(
-                    eras = eras,
-                    selectedEra = selectedEra,
-                    onEraSelected = { selectedEra = it }
-                )
+            EraSelectedButton(
+                eras = eras,
+                selectedEra = selectedEra,
+                onEraSelected = { selectedEra = it }
+            )
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                InfoButton(onClick = {})
+            InfoButton(onClick = {})
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            }
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+        }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
-            Row {
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+        Row {
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                // TODO:以下の複数のFilterChipを一つの関数で表示する案
-                FilterChip(
-                    onClick = {
-                        selectedCategory = if (selectedCategory == "battle") null else "battle"
-                    },
-                    label = {
-                        Text("")
-                    },
-                    selected = selectedCategory == "battle",
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.battle_field_icon),
-                            contentDescription = "戦争アイコン",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                )
+            // TODO:以下の複数のFilterChipを一つの関数で表示する案
+            FilterChip(
+                onClick = {
+                    selectedCategory = if (selectedCategory == "battle") null else "battle"
+                },
+                label = {
+                    Text("")
+                },
+                selected = selectedCategory == "battle",
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.battle_field_icon),
+                        contentDescription = "戦争アイコン",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                FilterChip(
-                    onClick = {
-                        selectedCategory = if (selectedCategory == "alliance") null else "alliance"
-                    },
-                    selected = selectedCategory == "alliance",
-                    label = { Text("") },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.alliance_icon),
-                            contentDescription = "同盟アイコン",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                )
+            FilterChip(
+                onClick = {
+                    selectedCategory = if (selectedCategory == "alliance") null else "alliance"
+                },
+                selected = selectedCategory == "alliance",
+                label = { Text("") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.alliance_icon),
+                        contentDescription = "同盟アイコン",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                FilterChip(
-                    onClick = {
-                        selectedCategory = if (selectedCategory == "route") null else "route"
-                    },
-                    selected = selectedCategory == "route",
-                    label = { Text("") },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.route_icon),
-                            contentDescription = "経路アイコン",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                )
+            FilterChip(
+                onClick = {
+                    selectedCategory = if (selectedCategory == "route") null else "route"
+                },
+                selected = selectedCategory == "route",
+                label = { Text("") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.route_icon),
+                        contentDescription = "経路アイコン",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                FilterChip(
-                    onClick = {
-                        selectedCategory = if (selectedCategory == "invention") null else "invention"
-                    },
-                    selected = selectedCategory == "invention",
-                    label = { Text("") },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.invention_icon),
-                            contentDescription = "発明アイコン",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                )
+            FilterChip(
+                onClick = {
+                    selectedCategory = if (selectedCategory == "invention") null else "invention"
+                },
+                selected = selectedCategory == "invention",
+                label = { Text("") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.invention_icon),
+                        contentDescription = "発明アイコン",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
 
-                FilterChip(
-                    onClick = {
-                        selectedCategory = if (selectedCategory == "art") null else "art"
-                    },
-                    selected = selectedCategory == "art",
-                    label = { Text("") },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.art_icon),
-                            contentDescription = "芸術アイコン",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                )
-            }
+            FilterChip(
+                onClick = {
+                    selectedCategory = if (selectedCategory == "art") null else "art"
+                },
+                selected = selectedCategory == "art",
+                label = { Text("") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.art_icon),
+                        contentDescription = "芸術アイコン",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            )
         }
     }
 }
 
 @Composable
-private fun ShowGoogleMap() {
-    val worldCenter = LatLng(0.0, 0.0)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(worldCenter, 2f)
-    }
-    val markerState = rememberMarkerState(position = worldCenter)
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            uiSettings = remember {
-                MapUiSettings(
-                    zoomControlsEnabled = true,
-                    zoomGesturesEnabled = true,
-                    scrollGesturesEnabled = true,
-                    tiltGesturesEnabled = true
-                )
-            }
-        ) {
-            Marker(
-                state = markerState,
-                title = "ヨークタウンの独立",
-                icon = bitmapDescriptorFromDrawable(LocalContext.current, R.drawable.battle_field_icon),
-                visible = true,
-                onClick = { false }
+private fun ShowGoogleMap(
+    cameraPositionState: CameraPositionState,
+    content: @Composable () -> Unit
+) {
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        uiSettings = remember {
+            MapUiSettings(
+                zoomControlsEnabled = true,
+                zoomGesturesEnabled = true,
+                scrollGesturesEnabled = true,
+                tiltGesturesEnabled = true
             )
         }
+    ) {
+        content()
     }
 }
 

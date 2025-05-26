@@ -5,18 +5,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.Polyline
-import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 
 @Composable
 fun ColumbusRoute(
-    selectedEra: String?
+    selectedEra: String?,
+    cameraPositionState: CameraPositionState
 ) {
     if (selectedEra == "15世紀" || selectedEra == "16世紀") {
-        val cameraPositionState = rememberCameraPositionState()
 
         val routePoints = listOf(
             LatLng(37.2159, -7.0145),   // パロス
@@ -30,7 +30,7 @@ fun ColumbusRoute(
                     update = CameraUpdateFactory.newLatLngZoom(point, 4f),
                     durationMs = 1000
                 )
-                delay(10000) // 各地点で一時停止
+                delay(3000) // 各地点で一時停止
             }
         }
 
