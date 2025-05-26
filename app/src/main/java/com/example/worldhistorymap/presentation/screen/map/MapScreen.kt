@@ -58,7 +58,6 @@ import com.example.worldhistorymap.presentation.screen.map.markers.InventionMark
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
 import com.example.worldhistorymap.presentation.screen.map.route.ColumbusRoute
-import com.example.worldhistorymap.util.bitmapDescriptorFromDrawable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -67,8 +66,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
