@@ -57,6 +57,7 @@ import com.example.worldhistorymap.presentation.screen.map.markers.BattleMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.InventionMarkers
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
+import com.example.worldhistorymap.presentation.screen.map.route.ColumbusRoute
 import com.example.worldhistorymap.util.bitmapDescriptorFromDrawable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -149,6 +150,10 @@ fun MapScreen(
                     selectedEra = selectedEra
                 )
             }
+
+            if (selectedCategory == "route") {
+                ColumbusRoute(selectedEra)
+            }
         }
 
         Column {
@@ -217,6 +222,23 @@ fun MapScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.alliance_icon),
                             contentDescription = "同盟アイコン",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+
+                FilterChip(
+                    onClick = {
+                        selectedCategory = if (selectedCategory == "route") null else "route"
+                    },
+                    selected = selectedCategory == "route",
+                    label = { Text("") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.route_icon),
+                            contentDescription = "経路アイコン",
                             modifier = Modifier.size(FilterChipDefaults.IconSize)
                         )
                     }
