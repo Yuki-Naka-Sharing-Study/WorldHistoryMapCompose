@@ -11,17 +11,17 @@ import com.google.maps.android.compose.rememberMarkerState
 @Composable
 fun InventionMarkers(
     context: Context,
-    visible: Boolean
+    selectedEra: String?
 ) {
-    if (!visible) return
+    if (selectedEra == "20世紀") {
+        val kittyHawk = LatLng(36.0646, -75.7050)
 
-    val kittyHawk = LatLng(36.0646, -75.7050)
-
-    Marker(
-        state = rememberMarkerState(position = kittyHawk),
-        title = "飛行機の発明",
-        icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
-        visible = true,
-        onClick = { false }
-    )
+        Marker(
+            state = rememberMarkerState(position = kittyHawk),
+            title = "飛行機の発明",
+            icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+            visible = true,
+            onClick = { false }
+        )
+    }
 }

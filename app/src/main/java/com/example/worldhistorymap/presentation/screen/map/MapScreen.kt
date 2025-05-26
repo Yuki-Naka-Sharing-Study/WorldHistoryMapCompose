@@ -115,7 +115,10 @@ fun MapScreen(
             }
 
             if (selectedCategory == "invention") {
-                InventionMarkers(context, true)
+                InventionMarkers(
+                    context = context,
+                    selectedEra = selectedEra
+                )
             }
 
             if (selectedCategory == "art") {
