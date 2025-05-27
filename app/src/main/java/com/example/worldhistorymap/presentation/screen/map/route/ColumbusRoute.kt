@@ -24,7 +24,7 @@ fun ColumbusRoute(
             LatLng(24.0634, -74.5240)   // サンサルバドル島
         )
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect("columbus") {
             for (point in routePoints) {
                 cameraPositionState.animate(
                     update = CameraUpdateFactory.newLatLngZoom(point, 4f),

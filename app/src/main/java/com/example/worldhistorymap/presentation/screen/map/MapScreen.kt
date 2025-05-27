@@ -58,6 +58,8 @@ import com.example.worldhistorymap.presentation.screen.map.markers.InventionMark
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
 import com.example.worldhistorymap.presentation.screen.map.route.ColumbusRoute
+import com.example.worldhistorymap.presentation.screen.map.route.MagellanRoute
+import com.example.worldhistorymap.presentation.screen.map.route.RouteAnimationController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -136,7 +138,7 @@ fun MapScreen(
             }
 
             if (selectedCategory == "route") {
-                ColumbusRoute(selectedEra, cameraPositionState)
+                RouteAnimationController(selectedEra, cameraPositionState)
             }
         }
     } else {
