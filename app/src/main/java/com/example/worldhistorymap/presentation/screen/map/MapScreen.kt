@@ -57,8 +57,6 @@ import com.example.worldhistorymap.presentation.screen.map.markers.BattleMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.InventionMarkers
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
-import com.example.worldhistorymap.presentation.screen.map.route.ColumbusRoute
-import com.example.worldhistorymap.presentation.screen.map.route.MagellanRoute
 import com.example.worldhistorymap.presentation.screen.map.route.RouteAnimationController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
