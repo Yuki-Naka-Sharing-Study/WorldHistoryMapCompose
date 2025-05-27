@@ -84,7 +84,7 @@ fun MapScreen(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val eras = listOf(
-        "紀元前3000年", "紀元前2000年", "紀元前1000年", "紀元前500年",
+        "紀元前5000年", "紀元前4000年", "紀元前3000年", "紀元前2000年", "紀元前1000年",
         "紀元前5世紀", "紀元前4世紀", "紀元前3世紀", "紀元前2世紀", "紀元前1世紀",
         "1世紀", "2世紀", "3世紀", "4世紀", "5世紀",
         "6世紀", "7世紀", "8世紀", "9世紀", "10世紀",

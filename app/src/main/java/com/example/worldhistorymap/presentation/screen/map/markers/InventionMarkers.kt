@@ -15,12 +15,60 @@ fun InventionMarkers(
 ) {
     when (selectedEra) {
 
+        // 紀元前4千年 - 文字の発明（楔形文字）
+        "紀元前4000年" -> {
+            val uruk = LatLng(31.3213, 45.6417) // メソポタミア・ウルク
+            Marker(
+                state = rememberMarkerState(position = uruk),
+                title = "文字の発明（シュメール・楔形文字）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 紀元前1000年 - 鉄器の使用
+        "紀元前1000年" -> {
+            val hattusa = LatLng(40.0267, 34.6144) // ヒッタイト首都
+            Marker(
+                state = rememberMarkerState(position = hattusa),
+                title = "鉄器の普及（ヒッタイト）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
         // 紀元前3世紀 - アルキメデスの螺旋ポンプ
         "紀元前3世紀" -> {
             val syracuse = LatLng(37.0755, 15.2866) // シラクサ（現イタリア・シチリア）
             Marker(
                 state = rememberMarkerState(position = syracuse),
                 title = "アルキメデスの螺旋ポンプ（古代ギリシャ）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 9世紀 - 木版印刷（中国・唐）
+        "9世紀" -> {
+            val changan = LatLng(34.3416, 108.9398) // 長安
+            Marker(
+                state = rememberMarkerState(position = changan),
+                title = "木版印刷の発明（唐代中国）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 10世紀 - 紙の製造技術の伝播（イスラム）
+        "10世紀" -> {
+            val baghdad = LatLng(33.3152, 44.3661) // バグダード
+            Marker(
+                state = rememberMarkerState(position = baghdad),
+                title = "紙の技術の伝播（中国→イスラム）",
                 icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
                 visible = true,
                 onClick = { false }
@@ -63,6 +111,18 @@ fun InventionMarkers(
             )
         }
 
+        // 14世紀 - 機械式時計（都市の時計塔）
+        "14世紀" -> {
+            val florence = LatLng(43.7696, 11.2558) // フィレンツェ
+            Marker(
+                state = rememberMarkerState(position = florence),
+                title = "機械式時計の発明（ヨーロッパ中世都市）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
         // 15世紀 - 活版印刷・カラベル船の設計
         "15世紀" -> {
             val mainz = LatLng(49.9980, 8.2711) // ドイツ・マインツ（グーテンベルク）
@@ -84,6 +144,17 @@ fun InventionMarkers(
             )
         }
 
+        // 16世紀 - 鉄砲の使用（火縄銃）
+        "16世紀" -> {
+            val tanegashima = LatLng(30.7353, 131.0020) // 種子島
+            Marker(
+                state = rememberMarkerState(position = tanegashima),
+                title = "鉄砲の伝来と普及（種子島）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
 
         // 17世紀 - 顕微鏡の実用化・振り子時計
         "17世紀" -> {
@@ -208,6 +279,27 @@ fun InventionMarkers(
             Marker(
                 state = rememberMarkerState(position = ucla),
                 title = "インターネットの原型 ARPANET（UCLA）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 21世紀 - スマートフォン
+        "21世紀" -> {
+            val applePark = LatLng(37.3349, -122.0090) // Apple Park（米カリフォルニア）
+            Marker(
+                state = rememberMarkerState(position = applePark),
+                title = "スマートフォンの普及（Apple）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+
+            val openAI = LatLng(37.7749, -122.4194) // サンフランシスコ
+            Marker(
+                state = rememberMarkerState(position = openAI),
+                title = "人工知能の革新（OpenAIなど）",
                 icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
                 visible = true,
                 onClick = { false }
