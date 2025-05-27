@@ -27,6 +27,18 @@ fun InventionMarkers(
             )
         }
 
+        // 17世紀 - 顕微鏡の実用化
+        "17世紀" -> {
+            val delft = LatLng(52.0116, 4.3571) // オランダ・デルフト
+            Marker(
+                state = rememberMarkerState(position = delft),
+                title = "顕微鏡の実用化（レーウェンフック）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
         // 18世紀 - 蒸気機関
         "18世紀" -> {
             val england = LatLng(51.5074, -0.1278) // ロンドン（ワットの改良）
@@ -60,9 +72,14 @@ fun InventionMarkers(
             )
         }
 
-        // 20世紀 - 飛行機
+        // 20世紀 - 飛行機・テレビ・抗生物質・原爆・コンピューター・インターネット
         "20世紀" -> {
-            val kittyHawk = LatLng(36.0646, -75.7050)
+            val kittyHawk = LatLng(36.0646, -75.7050) // ライト兄弟
+            val london = LatLng(51.5074, -0.1278)     // ベアード / フレミング
+            val losAlamos = LatLng(35.8800, -106.3031) // マンハッタン計画
+            val upenn = LatLng(39.9522, -75.1932)      // ENIAC
+            val ucla = LatLng(34.0689, -118.4452)      // ARPANET
+
             Marker(
                 state = rememberMarkerState(position = kittyHawk),
                 title = "飛行機の発明（ライト兄弟）",
@@ -70,7 +87,34 @@ fun InventionMarkers(
                 visible = true,
                 onClick = { false }
             )
+            Marker(
+                state = rememberMarkerState(position = london),
+                title = "テレビの発明（ベアード）／ペニシリンの発見（フレミング）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+            Marker(
+                state = rememberMarkerState(position = losAlamos),
+                title = "原子爆弾の開発（ロスアラモス研究所）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+            Marker(
+                state = rememberMarkerState(position = upenn),
+                title = "コンピューター ENIAC（ペンシルベニア大学）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+            Marker(
+                state = rememberMarkerState(position = ucla),
+                title = "インターネットの原型 ARPANET（UCLA）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
         }
     }
 }
-
