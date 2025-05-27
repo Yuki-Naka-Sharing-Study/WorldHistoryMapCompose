@@ -45,3 +45,46 @@ fun TripleEntentePolyline(
         )
     }
 }
+
+// 枢軸国
+@Composable
+fun AxisPowersPolyline(
+    selectedEra: String?
+) {
+    if (selectedEra == "20世紀") {
+        val axisPoints = listOf(
+            LatLng(52.5200, 13.4050), // ドイツ（ベルリン）
+            LatLng(41.9028, 12.4964), // イタリア（ローマ）
+            LatLng(35.6895, 139.6917), // 日本（東京）
+            LatLng(52.5200, 13.4050)  // 戻って三角形を閉じる
+        )
+
+        Polyline(
+            points = axisPoints,
+            color = Color.Red,
+            width = 5f
+        )
+    }
+}
+
+// 連合国
+@Composable
+fun AlliedPowersPolyline(
+    selectedEra: String?
+) {
+    if (selectedEra == "20世紀") {
+        val alliedPoints = listOf(
+            LatLng(51.5074, -0.1278), // イギリス（ロンドン）
+            LatLng(48.8566, 2.3522),  // フランス（パリ）
+            LatLng(38.9072, -77.0369), // アメリカ（ワシントンD.C.）
+            LatLng(55.7558, 37.6173),  // ソ連（モスクワ）
+            LatLng(51.5074, -0.1278)  // 戻ってロンドン
+        )
+
+        Polyline(
+            points = alliedPoints,
+            color = Color.Blue,
+            width = 5f
+        )
+    }
+}

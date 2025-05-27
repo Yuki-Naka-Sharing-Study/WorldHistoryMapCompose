@@ -55,6 +55,8 @@ import com.example.worldhistorymap.R
 import com.example.worldhistorymap.presentation.screen.map.markers.ArtMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.BattleMarkers
 import com.example.worldhistorymap.presentation.screen.map.markers.InventionMarkers
+import com.example.worldhistorymap.presentation.screen.map.polylines.AlliedPowersPolyline
+import com.example.worldhistorymap.presentation.screen.map.polylines.AxisPowersPolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleAlliancePolyline
 import com.example.worldhistorymap.presentation.screen.map.polylines.TripleEntentePolyline
 import com.example.worldhistorymap.presentation.screen.map.route.RouteAnimationController
@@ -131,6 +133,14 @@ fun MapScreen(
                 )
 
                 TripleEntentePolyline(
+                    selectedEra = selectedEra
+                )
+
+                AxisPowersPolyline(
+                    selectedEra = selectedEra
+                )
+
+                AlliedPowersPolyline(
                     selectedEra = selectedEra
                 )
             }
