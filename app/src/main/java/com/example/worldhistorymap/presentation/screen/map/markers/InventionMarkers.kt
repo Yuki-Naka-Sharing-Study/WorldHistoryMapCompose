@@ -27,6 +27,30 @@ fun InventionMarkers(
             )
         }
 
+        // 紀元前3千年 - 車輪の発明（メソポタミア・ウル）
+        "紀元前3000年" -> {
+            val ur = LatLng(30.9640, 46.1051) // ウル（現在のイラク）
+            Marker(
+                state = rememberMarkerState(position = ur),
+                title = "車輪の発明（シュメール）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 紀元前2千年 - 天文観測の体系化（古代エジプト）
+        "紀元前2000年" -> {
+            val thebes = LatLng(25.7188, 32.6573) // テーベ
+            Marker(
+                state = rememberMarkerState(position = thebes),
+                title = "天文観測の体系化（古代エジプト）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
         // 紀元前1000年 - 鉄器の使用
         "紀元前1000年" -> {
             val hattusa = LatLng(40.0267, 34.6144) // ヒッタイト首都
@@ -45,6 +69,18 @@ fun InventionMarkers(
             Marker(
                 state = rememberMarkerState(position = syracuse),
                 title = "アルキメデスの螺旋ポンプ（古代ギリシャ）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+        }
+
+        // 7世紀 - 天体観測装置（イスラム科学）
+        "7世紀" -> {
+            val damascus = LatLng(33.5138, 36.2765)
+            Marker(
+                state = rememberMarkerState(position = damascus),
+                title = "天体観測装置の発展（イスラム科学）",
                 icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
                 visible = true,
                 onClick = { false }
@@ -81,6 +117,15 @@ fun InventionMarkers(
             Marker(
                 state = rememberMarkerState(position = kaifeng),
                 title = "火薬の軍事利用（宋代中国）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+
+            val cluny = LatLng(46.4354, 4.6619) // クロニー修道院
+            Marker(
+                state = rememberMarkerState(position = cluny),
+                title = "水車の実用化（中世修道院）",
                 icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
                 visible = true,
                 onClick = { false }
@@ -129,6 +174,15 @@ fun InventionMarkers(
             Marker(
                 state = rememberMarkerState(position = mainz),
                 title = "活版印刷の発明（グーテンベルク）",
+                icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
+                visible = true,
+                onClick = { false }
+            )
+
+            val florence = LatLng(43.7696, 11.2558)
+            Marker(
+                state = rememberMarkerState(position = florence),
+                title = "遠近法の確立（ブルネレスキ）",
                 icon = bitmapDescriptorFromDrawable(context, R.drawable.invention_icon),
                 visible = true,
                 onClick = { false }
