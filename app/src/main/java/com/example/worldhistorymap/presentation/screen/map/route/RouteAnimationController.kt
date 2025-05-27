@@ -16,41 +16,40 @@ fun RouteAnimationController(
     selectedEra: String?,
     cameraPositionState: CameraPositionState
 ) {
-    if (selectedEra == "16世紀") {
-        val columbusPoints = listOf(
-            LatLng(37.2159, -7.0145),   // パロス
-            LatLng(28.2936, -16.6214),  // カナリア諸島
-            LatLng(24.0634, -74.5240)   // サンサルバドル島
-        )
-        val columbusTitles = listOf(
-            "コロンブスの経路：パロス（出発地）",
-            "コロンブスの経路：カナリア諸島（中継地）",
-            "コロンブスの経路：サンサルバドル島（到達地）"
-        )
+    val columbusPoints = listOf(
+        LatLng(37.2159, -7.0145),   // パロス
+        LatLng(28.2936, -16.6214),  // カナリア諸島
+        LatLng(24.0634, -74.5240)   // サンサルバドル島
+    )
+    val columbusTitles = listOf(
+        "コロンブスの経路：パロス（出発地）",
+        "コロンブスの経路：カナリア諸島（中継地）",
+        "コロンブスの経路：サンサルバドル島（到達地）"
+    )
 
-        val magellanPoints = listOf(
-            LatLng(36.5333, -6.2833),   // セビリア
-            LatLng(-34.6037, -58.3816), // リオ・デ・ラ・プラタ
-            LatLng(-52.6200, -70.9400), // マゼラン海峡
-            LatLng(-17.7134, -149.4068), // 太平洋・タヒチ
-            LatLng(13.4443, 144.7937),  // グアム
-            LatLng(10.3157, 123.8854),  // セブ島
-            LatLng(-34.9205, -57.9536), // 喜望峰
-            LatLng(36.5333, -6.2833)    // セビリア帰還
-        )
-        val magellanTitles = listOf(
-            "マゼランの経路：セビリア（出発地）",
-            "マゼランの経路：リオ・デ・ラ・プラタ（補給地）",
-            "マゼランの経路：マゼラン海峡（通過）",
-            "マゼランの経路：太平洋（タヒチ付近）",
-            "マゼランの経路：グアム（補給地）",
-            "マゼランの経路：セブ島（マゼラン戦死）",
-            "マゼランの経路：喜望峰（帰還航路）",
-            "マゼランの経路：セビリア（帰還）"
-        )
+    val magellanPoints = listOf(
+        LatLng(36.5333, -6.2833),   // セビリア
+        LatLng(-34.6037, -58.3816), // リオ・デ・ラ・プラタ
+        LatLng(-52.6200, -70.9400), // マゼラン海峡
+        LatLng(-17.7134, -149.4068), // 太平洋・タヒチ
+        LatLng(13.4443, 144.7937),  // グアム
+        LatLng(10.3157, 123.8854),  // セブ島
+        LatLng(-34.9205, -57.9536), // 喜望峰
+        LatLng(36.5333, -6.2833)    // セビリア帰還
+    )
+    val magellanTitles = listOf(
+        "マゼランの経路：セビリア（出発地）",
+        "マゼランの経路：リオ・デ・ラ・プラタ（補給地）",
+        "マゼランの経路：マゼラン海峡（通過）",
+        "マゼランの経路：太平洋（タヒチ付近）",
+        "マゼランの経路：グアム（補給地）",
+        "マゼランの経路：セブ島（マゼラン戦死）",
+        "マゼランの経路：喜望峰（帰還航路）",
+        "マゼランの経路：セビリア（帰還）"
+    )
 
-        // アニメーション
-        LaunchedEffect(selectedEra) {
+    LaunchedEffect(selectedEra) {
+        if (selectedEra == "15世紀" || selectedEra == "16世紀") {
             for (point in columbusPoints) {
                 cameraPositionState.animate(
                     update = CameraUpdateFactory.newLatLngZoom(point, 4f),
@@ -58,6 +57,9 @@ fun RouteAnimationController(
                 )
                 delay(3000)
             }
+        }
+
+        if (selectedEra == "16世紀") {
             for (point in magellanPoints) {
                 cameraPositionState.animate(
                     update = CameraUpdateFactory.newLatLngZoom(point, 3.5f),
@@ -66,26 +68,29 @@ fun RouteAnimationController(
                 delay(3000)
             }
         }
+    }
 
+    if (selectedEra == "15世紀" || selectedEra == "16世紀") {
         columbusPoints.forEachIndexed { index, point ->
             Marker(
                 state = rememberMarkerState(position = point),
                 title = columbusTitles[index]
             )
         }
+        Polyline(
+            points = columbusPoints,
+            color = Color.Blue,
+            width = 6f
+        )
+    }
 
+    if (selectedEra == "16世紀") {
         magellanPoints.forEachIndexed { index, point ->
             Marker(
                 state = rememberMarkerState(position = point),
                 title = magellanTitles[index]
             )
         }
-
-        Polyline(
-            points = columbusPoints,
-            color = Color.Blue,
-            width = 6f
-        )
         Polyline(
             points = magellanPoints,
             color = Color.Blue,
