@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.google.maps.android:maps-compose:6.5.2")
     implementation("com.google.maps.android:maps-compose-utils:6.5.2")
     implementation("com.google.maps.android:maps-compose-widgets:6.5.2")
